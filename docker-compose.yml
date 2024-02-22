@@ -1,0 +1,33 @@
+version : '3'
+services :
+    redis :
+        build : ./redis
+        ports :
+            - "127.0.0.1:6379:6379" # 如不需外网访问容器里面的服务 设置ip地址为127.0.0.1即可
+        volumes:
+            - D:\docker\redis\log:/opt/log
+            - D:\docker\redis\data:/opt/data
+        container_name : redis601
+    mysql:
+        build: ./mysql
+        ports:
+            - "127.0.0.1:3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - D:\docker\mysql\log:/opt/log
+            - D:\docker\mysql\data:/opt/data
+        container_name: mysql57
+    nginx :
+        build : ./nginx
+        ports :
+            - "80:80" # 如果宿主机有安装nginx或者apache并且在运行则需要映射到其他端口
+        depends_on :
+            - "redis"
+            - "mysql"
+        volumes :
+            - D:\docker\nginx\log:/opt/log
+            - D:\docker\nginx\conf.d:/etc/nginx/conf.d
+            - D:\docker\nginx\www:/opt/www
+        container_name : nginx118
+
